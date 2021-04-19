@@ -12,11 +12,13 @@ class JobSpider(scrapy.Spider):
         i = 0
         for jobset in response.css(SET_SELECTOR):
             items = HackernewsItem()
-            items['title'] = jobset.css('span.commtext ::text').get().strip()
+            items['title'] = jobset.css('span.commtext.c00::text').extract()
             items['web'] = jobset.css('span.commtext a::attr(href)').get()
             items['content'] = jobset.css('p ::text').extract()
             items['age'] = jobset.css('span.age a::text').extract_first()
 
+
+            # TODO: need to add multiple pages.
             yield items
 
 

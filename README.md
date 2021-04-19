@@ -28,6 +28,10 @@ scrapy runspider crawler.py -o ../data/output.json
 python3 main.py
 ```
 
+#### Result
+![Example data](example_json.png)
+
+
 ## Contributing
 
 1. Fork it
