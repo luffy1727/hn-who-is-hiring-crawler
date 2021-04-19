@@ -32,7 +32,8 @@ def clean_data():
                 item['id'] = index
                 item['weight'] = set_weight(title, real, item['remote'])
                 index = index + 1
-                cleaned_data.append(item)
+                if(item['weight'] >= 5):
+                    cleaned_data.append(item)
 
         newlist = sorted(cleaned_data, key=itemgetter('weight'), reverse=True)
 
