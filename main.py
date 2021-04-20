@@ -6,6 +6,11 @@ language_keywords = ['php', 'python']
 position_keywords = ['back-end', 'backend', 'back end', 'software engineer']
 tech_stack_keywords = ['aws', 'mysql', 'sql']
 
+# osko stack
+# language_keywords = ['react', 'rust', 'javascript']
+# position_keywords = ['front-end', 'frontend', 'front end', 'software engineer']
+# tech_stack_keywords = ['aws', 'mongo', 'express', 'node']
+
 def clean_data():
     index = 0
     with open("data/output.json", "r") as json_data:
@@ -23,14 +28,16 @@ def clean_data():
             if (real != '' and title.find('|') != -1):
                 title_list = title.split('|')
                 item['remote'] = False
+                item['visa'] = False
                 for title_item in title_list:
                     item['remote'] = check_remote(title_item)
+                    item['visa'] = check_visa(title_item, real)
                 item['position'] = find_position(title)
                 item['company_name'] = title_list[0].strip()
                 item['content'] = real
                 item['title'] = title
                 item['id'] = index
-                item['weight'] = set_weight(title, real, item['remote'])
+                item['weight'] = set_weight(title, real, item['remote'], item['visa'])
                 index = index + 1
                 if(item['weight'] >= 5):
                     cleaned_data.append(item)
@@ -58,9 +65,19 @@ def find_position(title):
                 if (item.lower().find('developer') != -1 or item.lower().find('software engineer') != -1):
                     response = response + item.strip()
     return response
-def set_weight(title, content, isRemote):
+
+def check_visa(title_item, content):
+    response = False
+    
+    if (title_item.lower().find('visa') != -1 or content.lower().find('visa') != -1):
+        response = True
+    return response
+
+def set_weight(title, content, isRemote, hasVisa):
     weight = 0
     if (isRemote):
+        weight = weight + 3
+    if (hasVisa):
         weight = weight + 3
     for key in language_keywords:
         if (title.lower().find(key) != -1 or content.find(key) != -1):
@@ -73,10 +90,14 @@ def set_weight(title, content, isRemote):
             weight = weight + 1
     return weight
 
-# TODO ADD VISA
+# PHASE 2
 # TODO CALCULATE ACTUAL DATE INSTEAD OF DAYS AGO
-# TODO ADD CODING STANDARD CI
 # TODO ADD EMAILING SERVICE
 # TODO FIND THEIR EMAIL
+
+# PHASE 3
+# TODO ADD DOCKER
+# TODO ADD CODING STANDARD CI
+# TODO ADD UI
 
 clean_data()
