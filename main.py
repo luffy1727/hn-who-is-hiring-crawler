@@ -1,6 +1,8 @@
 import json
-
+import re
+from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from datetime import datetime
 
 language_keywords = ['php', 'python']
 position_keywords = ['back-end', 'backend', 'back end', 'software engineer']
@@ -39,6 +41,7 @@ def clean_data():
                 item['id'] = index
                 item['weight'] = set_weight(title, real, item['remote'], item['visa'])
                 index = index + 1
+                item['old_age'] = str(calculate_date(item['age']))
                 if(item['weight'] >= 5):
                     cleaned_data.append(item)
 
@@ -90,8 +93,14 @@ def set_weight(title, content, isRemote, hasVisa):
             weight = weight + 1
     return weight
 
+def calculate_date(date):
+    value, unit = re.search(r'(\d+) (\w+) ago', date).groups()
+    if not unit.endswith('s'): 
+        unit += 's'
+    delta = relativedelta(**{unit: int(value)})
+    return (datetime.now() - delta)
+
 # PHASE 2
-# TODO CALCULATE ACTUAL DATE INSTEAD OF DAYS AGO
 # TODO ADD EMAILING SERVICE
 # TODO FIND THEIR EMAIL
 
