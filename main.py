@@ -5,7 +5,7 @@ from operator import itemgetter
 from datetime import datetime
 
 language_keywords = ['php', 'python']
-position_keywords = ['back-end', 'backend', 'back end', 'software engineer']
+position_keywords = ['back-end', 'backend', 'back end', 'software engineer', 'engineer']
 tech_stack_keywords = ['aws', 'mysql', 'sql']
 email_regex_patterns = [r'[\w\.-]+@[\w\.-]+', r'[\w\.-]+\s*?\[at\]\s*?[\w\.-]+\s*?\[dot\]+\s*?[\w\.-]+', r'[\w\.-]+\s*?\[at\]\s*?[\w\.-]+']
 
@@ -50,7 +50,7 @@ def clean_data():
 
         newlist = sorted(cleaned_data, key=itemgetter('weight'), reverse=True)
 
-        with open("cleaned_output.json", "w") as write_data:
+        with open("data/cleaned_output.json", "w") as write_data:
             json.dump(newlist, write_data, indent=4, sort_keys=True)
 
 def find_email(title_item, content):
@@ -74,10 +74,10 @@ def find_position(title):
     title_list = title.split('|')
     response = ''
     for title_item in title_list:
-        if (title_item.lower().find('developer') != -1 or title_item.lower().find('software engineer') != -1):
+        if (title_item.lower().find('developer') != -1 or title_item.lower().find('engineer') != -1):
             item_list = title_item.split(',')
             for item in item_list:
-                if (item.lower().find('developer') != -1 or item.lower().find('software engineer') != -1):
+                if (item.lower().find('developer') != -1 or item.lower().find('engineer') != -1):
                     response = response + item.strip()
     return response
 
@@ -115,8 +115,9 @@ def calculate_date(date):
     return (datetime.now() - delta)
 
 # PHASE 2
-# TODO FIND THEIR EMAIL
 # TODO ADD EMAILING SERVICE
+# TODO ADD MULTIPLE PAGES
+
 
 # PHASE 3
 # TODO ADD DOCKER
