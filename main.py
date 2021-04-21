@@ -7,6 +7,7 @@ from datetime import datetime
 language_keywords = ['php', 'python']
 position_keywords = ['back-end', 'backend', 'back end', 'software engineer']
 tech_stack_keywords = ['aws', 'mysql', 'sql']
+email_regex_patterns = [r'[\w\.-]+@[\w\.-]+', r'[\w\.-]+\s*?\[at\]\s*?[\w\.-]+\s*?\[dot\]+\s*?[\w\.-]+', r'[\w\.-]+\s*?\[at\]\s*?[\w\.-]+']
 
 # osko stack
 # language_keywords = ['react', 'rust', 'javascript']
@@ -39,9 +40,11 @@ def clean_data():
                 item['content'] = real
                 item['title'] = title
                 item['id'] = index
-                item['weight'] = set_weight(title, real, item['remote'], item['visa'])
+                item['email'] = find_email(title, real)
+                item['weight'] = set_weight(title, real, item)
                 index = index + 1
                 item['old_age'] = str(calculate_date(item['age']))
+                
                 if(item['weight'] >= 5):
                     cleaned_data.append(item)
 
@@ -50,6 +53,15 @@ def clean_data():
         with open("cleaned_output.json", "w") as write_data:
             json.dump(newlist, write_data, indent=4, sort_keys=True)
 
+def find_email(title_item, content):
+    for pattern in email_regex_patterns:
+        if (re.search(pattern, title_item)):
+            return re.search(pattern, title_item)[0].replace(' ', '').replace('[at]', '@').replace('[dot]', '.')
+    for pattern in email_regex_patterns:
+        if (re.search(pattern, content)):
+            return re.search(pattern, content)[0].replace(' ', '').replace('[at]', '@').replace('[dot]', '.')
+    
+    return None
 def check_remote(title_item):
     response = False
     if (title_item.lower().find('remote') != -1):
@@ -76,11 +88,13 @@ def check_visa(title_item, content):
         response = True
     return response
 
-def set_weight(title, content, isRemote, hasVisa):
+def set_weight(title, content, item):
     weight = 0
-    if (isRemote):
+    if (item['email']):
+        weight = weight + 0.5
+    if (item['remote']):
         weight = weight + 3
-    if (hasVisa):
+    if (item['visa']):
         weight = weight + 3
     for key in language_keywords:
         if (title.lower().find(key) != -1 or content.find(key) != -1):
@@ -101,8 +115,8 @@ def calculate_date(date):
     return (datetime.now() - delta)
 
 # PHASE 2
-# TODO ADD EMAILING SERVICE
 # TODO FIND THEIR EMAIL
+# TODO ADD EMAILING SERVICE
 
 # PHASE 3
 # TODO ADD DOCKER
