@@ -17,9 +17,13 @@ class JobSpider(scrapy.Spider):
             items['content'] = jobset.css('p ::text').extract()
             items['age'] = jobset.css('span.age a::text').extract_first()
 
-
-            # TODO: need to add multiple pages.
             yield items
+
+        next_page = response.css('.morelink::attr(href)').get()
+        if next_page is not None:
+            next_page = response.urljoin(next_page)
+            yield scrapy.Request(next_page, callback=self.parse)
+
 
 
 

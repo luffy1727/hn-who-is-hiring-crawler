@@ -45,7 +45,7 @@ def clean_data():
                 index = index + 1
                 item['old_age'] = str(calculate_date(item['age']))
                 
-                if(item['weight'] >= 5):
+                if(item['weight'] >= 7 and (item['remote'] or item['visa']) and item['email']):
                     cleaned_data.append(item)
 
         newlist = sorted(cleaned_data, key=itemgetter('weight'), reverse=True)
@@ -65,7 +65,8 @@ def find_email(title_item, content):
 def check_remote(title_item):
     response = False
     if (title_item.lower().find('remote') != -1):
-        if (title_item.lower().find('only') == -1):
+        if (title_item.lower().find('only') == -1 
+        or title_item.lower().find('(US)') == -1):
             response = True
             
     return response
@@ -113,11 +114,6 @@ def calculate_date(date):
         unit += 's'
     delta = relativedelta(**{unit: int(value)})
     return (datetime.now() - delta)
-
-# PHASE 2
-# TODO ADD EMAILING SERVICE
-# TODO ADD MULTIPLE PAGES
-
 
 # PHASE 3
 # TODO ADD DOCKER
