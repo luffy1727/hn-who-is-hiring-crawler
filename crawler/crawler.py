@@ -4,7 +4,7 @@ from job import HackernewsItem
 class JobSpider(scrapy.Spider):
     name = "job_spider"
 
-    start_urls = ['https://news.ycombinator.com/item?id=26661443']
+    start_urls = ['https://news.ycombinator.com/item?id=27025922']
 
     def parse(self, response):
         SET_SELECTOR  = 'td.default'

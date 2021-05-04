@@ -4,15 +4,15 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from datetime import datetime
 
-language_keywords = ['php', 'python']
-position_keywords = ['back-end', 'backend', 'back end', 'software engineer', 'engineer']
-tech_stack_keywords = ['aws', 'mysql', 'sql']
+# language_keywords = ['php', 'python']
+# position_keywords = ['back-end', 'backend', 'back end', 'software engineer', 'engineer']
+# tech_stack_keywords = ['aws', 'mysql', 'sql']
 email_regex_patterns = [r'[\w\.-]+@[\w\.-]+', r'[\w\.-]+\s*?\[at\]\s*?[\w\.-]+\s*?\[dot\]+\s*?[\w\.-]+', r'[\w\.-]+\s*?\[at\]\s*?[\w\.-]+']
 
 # osko stack
-# language_keywords = ['react', 'rust', 'javascript']
-# position_keywords = ['front-end', 'frontend', 'front end', 'software engineer']
-# tech_stack_keywords = ['aws', 'mongo', 'express', 'node']
+language_keywords = ['react', 'rust', 'javascript', 'reactjs', 'react-native', 'react native']
+position_keywords = ['front-end', 'frontend', 'front end', 'software engineer', 'mobile']
+tech_stack_keywords = ['aws', 'mongo', 'express', 'node', 'mysql']
 
 def clean_data():
     index = 0
@@ -45,7 +45,7 @@ def clean_data():
                 index = index + 1
                 item['old_age'] = str(calculate_date(item['age']))
                 
-                if(item['weight'] >= 7 and (item['remote'] or item['visa']) and item['email']):
+                if(item['weight'] >= 9 and (item['remote'] or item['visa'])):
                     cleaned_data.append(item)
 
         newlist = sorted(cleaned_data, key=itemgetter('weight'), reverse=True)
@@ -56,10 +56,10 @@ def clean_data():
 def find_email(title_item, content):
     for pattern in email_regex_patterns:
         if (re.search(pattern, title_item)):
-            return re.search(pattern, title_item)[0].replace(' ', '').replace('[at]', '@').replace('[dot]', '.')
+            return re.search(pattern, title_item).group(0).replace(' ', '').replace('[at]', '@').replace('[dot]', '.')
     for pattern in email_regex_patterns:
         if (re.search(pattern, content)):
-            return re.search(pattern, content)[0].replace(' ', '').replace('[at]', '@').replace('[dot]', '.')
+            return re.search(pattern, content).group(0).replace(' ', '').replace('[at]', '@').replace('[dot]', '.')
     
     return None
 def check_remote(title_item):
@@ -99,7 +99,7 @@ def set_weight(title, content, item):
         weight = weight + 3
     for key in language_keywords:
         if (title.lower().find(key) != -1 or content.find(key) != -1):
-            weight = weight + 3
+            weight = weight + 5
     for key in position_keywords:
         if (title.lower().find(key) != -1 or content.find(key) != -1):
             weight = weight + 2
