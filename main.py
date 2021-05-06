@@ -4,15 +4,15 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from datetime import datetime
 
-# language_keywords = ['php', 'python']
-# position_keywords = ['back-end', 'backend', 'back end', 'software engineer', 'engineer']
-# tech_stack_keywords = ['aws', 'mysql', 'sql']
+language_keywords = ['php', 'python']
+position_keywords = ['back-end', 'backend', 'back end', 'software engineer', 'engineer']
+tech_stack_keywords = ['aws', 'mysql', 'sql']
 email_regex_patterns = [r'[\w\.-]+@[\w\.-]+', r'[\w\.-]+\s*?\[at\]\s*?[\w\.-]+\s*?\[dot\]+\s*?[\w\.-]+', r'[\w\.-]+\s*?\[at\]\s*?[\w\.-]+']
 
 # osko stack
-language_keywords = ['react', 'rust', 'javascript', 'reactjs', 'react-native', 'react native']
-position_keywords = ['front-end', 'frontend', 'front end', 'software engineer', 'mobile']
-tech_stack_keywords = ['aws', 'mongo', 'express', 'node', 'mysql']
+# language_keywords = ['react', 'rust', 'javascript', 'reactjs', 'react-native', 'react native']
+# position_keywords = ['front-end', 'frontend', 'front end', 'software engineer', 'mobile']
+# tech_stack_keywords = ['aws', 'mongo', 'express', 'node', 'mysql']
 
 def clean_data():
     index = 0
@@ -44,10 +44,8 @@ def clean_data():
                 item['weight'] = set_weight(title, real, item)
                 index = index + 1
                 item['old_age'] = str(calculate_date(item['age']))
-                
-                if(item['weight'] >= 9 and (item['remote'] or item['visa'])):
+                if(item['weight'] >= 9 and (item['remote'] or item['visa']) and item['email']):
                     cleaned_data.append(item)
-
         newlist = sorted(cleaned_data, key=itemgetter('weight'), reverse=True)
 
         with open("data/cleaned_output.json", "w") as write_data:
